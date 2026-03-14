@@ -37,7 +37,10 @@ import { LevelLoader } from "./src/LevelLoader.js";
 import { Game } from "./src/Game.js";
 import { ParallaxBackground } from "./src/ParallaxBackground.js";
 import { loadAssets } from "./src/AssetLoader.js";
-import { applyIntegerScale, installResizeHandler } from "./src/utils/IntegerScale.js";
+import {
+  applyIntegerScale,
+  installResizeHandler,
+} from "./src/utils/IntegerScale.js";
 
 import { CameraController } from "./src/CameraController.js";
 import { InputManager } from "./src/InputManager.js";
@@ -129,7 +132,11 @@ async function boot() {
   // --- Audio registry ---
   // (AudioContext may still be locked until the user clicks/presses a key.)
   soundManager = new SoundManager();
-
+  soundManager.load("barking", "./assets/sfx/barking.wav");
+  soundManager.load("leafCollect", "./assets/sfx/leafCollect.wav");
+  soundManager.load("receiveDamage", "./assets/sfx/receiveDamage.wav");
+  soundManager.load("die", "./assets/sfx/die.wav");
+  soundManager.load("jump", "./assets/sfx/jump.wav");
   // --- Parallax layer defs (VIEW) ---
   const defs = levelPkg.level?.view?.parallax ?? [];
   parallaxLayers = defs
@@ -189,7 +196,9 @@ function initRuntime() {
     inputManager,
     soundManager,
     debugOverlay,
-  });
+    levelsUrl: LEVELS_URL,   // ← ADD
+    tuningDoc: tuningDoc,    // ← ADD
+});
   game.build();
 
   // UI overlays

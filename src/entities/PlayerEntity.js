@@ -10,11 +10,14 @@
 // Non-goals:
 // - Does NOT read input directly (PlayerController does)
 // - Does NOT decide game win state (Level does)
+import { SoundManager } from "../SoundManager.js";
 
 export class PlayerEntity {
   constructor(pkg, assets) {
     this.pkg = pkg;
     this.assets = assets;
+    this.soundManager = new SoundManager();
+    this.soundManager.load("barking", "./assets/sfx/barking.wav");
 
     this.tuning = pkg.tuning || {};
     this.tilesCfg = pkg.tiles || {};
@@ -220,6 +223,9 @@ export class PlayerEntity {
     this.attacking = true;
     this.attackHitThisSwing = false;
     this.attackFrameCounter = 0;
+    console.log("made it!");
+    this.soundManager.play("barking"); // Play bark sound when attack starts
+
     this.stopX();
     this._playAni("attack", 0);
   }
@@ -238,7 +244,8 @@ export class PlayerEntity {
   // animation (visual state)
   // -----------------------
   applyAnimation({ grounded, won }) {
-    if (!this.sprite?.anis || Object.keys(this.sprite.anis).length === 0) return;
+    if (!this.sprite?.anis || Object.keys(this.sprite.anis).length === 0)
+      return;
 
     // ---- DEAD: play once, then hold last frame (prevents infinite loop)
     if (this.dead) {
@@ -310,7 +317,8 @@ export class PlayerEntity {
     if (!this.sprite) return;
 
     if (!this.dead && this.invulnTimer > 0) {
-      this.sprite.tint = Math.floor(this.invulnTimer / 4) % 2 === 0 ? "#ff5050" : "#ffffff";
+      this.sprite.tint =
+        Math.floor(this.invulnTimer / 4) % 2 === 0 ? "#ff5050" : "#ffffff";
     } else {
       this.sprite.tint = "#ffffff";
     }
